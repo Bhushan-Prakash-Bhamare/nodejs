@@ -1,7 +1,6 @@
-const http=require('http');
 const fs=require('fs');
 
-const server=http.createServer((req,res)=>{
+const requesthandler=(req,res)=>{
     const url=req.url;
     const method=req.method;
 
@@ -24,7 +23,7 @@ const server=http.createServer((req,res)=>{
         req.on('data',(chunk)=>{
             body.push(chunk);
         });
-        return req.on('end',()=>{
+        req.on('end',()=>{
             const parsedBody=Buffer.concat(body).toString();
             const message=parsedBody.split('=')[1];
             fs.writeFile('message.txt',message,(err)=>{
@@ -37,7 +36,14 @@ const server=http.createServer((req,res)=>{
             })
         }) 
     }
+}
 
-})
+module.exports=requesthandler;
 
-server.listen(2000);
+// module.exports={
+//     handler:requesthandler,
+//     someText:'Some text'
+// };
+
+// module.exports.handler=requesthandler;
+// module.exports.someText='some text';
